@@ -6,25 +6,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/razer"
     tools:context=".MainActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000000"
-        android:alpha="0.5" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:src="@drawable/opticdev_gray"
-            android:layout_gravity="center" />
+        <com.github.florent37.shapeofview.shapes.DiagonalView
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:elevation="4dp"
+            app:shape_diagonal_angle="10"
+            app:shape_diagonal_direction="left"
+            app:shape_diagonal_position="bottom">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorAccent"
+                />
+
+            <ImageView
+                android:layout_width="250dp"
+                android:layout_height="180dp"
+                android:src="@drawable/opticdev_gray"
+                android:layout_gravity="center|top" />
+
+        </com.github.florent37.shapeofview.shapes.DiagonalView>
 
 
         <LinearLayout
@@ -33,19 +44,18 @@
             android:orientation="horizontal"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="70dp">
 
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_email_black_24dp"
+                android:src="@drawable/ic_email_grey"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="5dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextWhite"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -70,14 +80,13 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_password"
+                android:src="@drawable/ic_https_black_24dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginRight="5dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/EditTextWhite"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -100,9 +109,9 @@
             android:background="@drawable/rounded_button"
             android:backgroundTint="@color/colorAccent"
             android:textColor="@color/colorWhite"
-            android:layout_marginTop="45dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"/>
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"/>
 
     </LinearLayout>
 
@@ -119,7 +128,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="¿No tienes cuenta?"
-            android:textColor="@color/colorWhite"
             android:textSize="17sp"/>
 
         <TextView
@@ -128,13 +136,11 @@
             android:layout_height="wrap_content"
             android:text="REGISTRATE AQUI"
             android:layout_marginLeft="5dp"
-            android:textColor="@color/colorWhite"
             android:textSize="17sp"
             android:textStyle="bold"
             />
 
     </LinearLayout>
-
 
 
 
