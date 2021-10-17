@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "741404098423",
+    "project_id": "freegamer-951df",
+    "storage_bucket": "freegamer-951df.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741404098423:android:f5f5bfc2d32559e6c22b72",
+        "android_client_info": {
+          "package_name": "com.hdz.freegamer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741404098423-jocabu15bqsu7ia5bbtblr8qnk5a04vr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hdz.freegamer",
+            "certificate_hash": "3e1b23bc06d03c0a1e06747f93283ed75f030412"
+          }
+        },
+        {
+          "client_id": "741404098423-r63i618h6afo2p144sc553l4d8i2in4u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3wBnHzk9AJnEQ1hC0xlSyn2e79NUf-iU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741404098423-r63i618h6afo2p144sc553l4d8i2in4u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
