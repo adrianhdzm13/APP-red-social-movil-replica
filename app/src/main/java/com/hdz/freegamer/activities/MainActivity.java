@@ -47,11 +47,10 @@ public class MainActivity extends AppCompatActivity {
     Button mButtonLogin;
     AuthProvider mAuthProvider;
     SignInButton mButtonGoogle;
-    private GoogleSignInClient mGoogleSignInClient;
-    private final  int REQUEST_CODE_GOOGLE = 1;
-   UsersProvider mUsersProvider;
-   AlertDialog mDialog;
-
+    GoogleSignInClient mGoogleSignInClient;
+    UsersProvider mUsersProvider;
+    private final int REQUEST_CODE_GOOGLE = 1;
+    AlertDialog mDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,9 +94,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         mTextViewRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,6 +102,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+ //metodo para validar si la sesion del usuario existe
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mAuthProvider.getUserSession() != null) {
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+    }
+
     //metodo para vereficar el inicio de sesion
     private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
