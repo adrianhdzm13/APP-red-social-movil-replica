@@ -14,7 +14,6 @@ import com.hdz.freegamer.R;
  * A simple {@link Fragment} subclass.
  */
 public class ChatsFragment extends Fragment {
-
     public ChatsFragment() {
         // Required empty public constructor
     }

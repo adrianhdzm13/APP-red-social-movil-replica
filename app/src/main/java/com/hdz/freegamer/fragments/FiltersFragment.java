@@ -14,7 +14,6 @@ import com.hdz.freegamer.R;
  * A simple {@link Fragment} subclass.
  */
 public class FiltersFragment extends Fragment {
-
     public FiltersFragment() {
         // Required empty public constructor
     }

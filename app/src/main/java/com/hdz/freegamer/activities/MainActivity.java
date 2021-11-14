@@ -40,7 +40,6 @@ import dmax.dialog.SpotsDialog;
 
 public class MainActivity extends AppCompatActivity {
 
-    //interactuar con las vistas
     TextView mTextViewRegister;
     TextInputEditText mTextInputEmail;
     TextInputEditText mTextInputPassword;
@@ -51,26 +50,25 @@ public class MainActivity extends AppCompatActivity {
     UsersProvider mUsersProvider;
     private final int REQUEST_CODE_GOOGLE = 1;
     AlertDialog mDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         mTextViewRegister = findViewById(R.id.textViewRegister);
         mTextInputEmail = findViewById(R.id.textInputEmail);
-        mButtonGoogle = findViewById(R.id.btnLoginGoogle);
         mTextInputPassword = findViewById(R.id.textInputPassword);
         mButtonLogin = findViewById(R.id.btnLogin);
+        mButtonGoogle = findViewById(R.id.btnLoginGoogle);
 
-
-        mAuthProvider =  new AuthProvider();
-        mDialog =  new SpotsDialog.Builder()
+        mAuthProvider = new AuthProvider();
+        mDialog = new SpotsDialog.Builder()
                 .setContext(this)
                 .setMessage("Espere un momento")
                 .setCancelable(false).build();
 
-        //Creacion de un objeto con todas las configuraciones necesarias para el inicio de sesion
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -82,13 +80,12 @@ public class MainActivity extends AppCompatActivity {
         mButtonGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signInGoogle();//ejecuta el metodo al oprimir el boton de google
+                signInGoogle();
             }
         });
 
         mButtonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            //clic en el boton login
             public void onClick(View view) {
                 login();
             }
@@ -102,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
- //metodo para validar si la sesion del usuario existe
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -113,11 +110,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //metodo para vereficar el inicio de sesion
     private void signInGoogle() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, REQUEST_CODE_GOOGLE);
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -140,36 +137,35 @@ public class MainActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         mDialog.show();
         mAuthProvider.googleLogin(acct).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            String id = mAuthProvider.getUid();
-                            checkUserExist(id);
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    String id = mAuthProvider.getUid();
+                    checkUserExist(id);
+                }
+                else {
+                    mDialog.dismiss();
+                    // If sign in fails, display a message to the user.
+                    Log.w("ERROR", "signInWithCredential:failure", task.getException());
+                    Toast.makeText(MainActivity.this, "No se pudo iniciar sesion con google", Toast.LENGTH_SHORT).show();
+                }
 
-                        } else {
-                            mDialog.dismiss();//para que deje de mostrarse
-                            // If sign in fails, display a message to the user.
-                            Log.w("ERROR", "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "No se pudo iniciar sesion con google", Toast.LENGTH_SHORT).show();
-                        }
-
-
-                    }
-                });
+                // ...
+            }
+        });
     }
 
-    //metodo que hace la consulta  ala DB, apuntando a la coleccion que vamos a consultar
-    //para que el usuario inicie sesion con google
-    private void checkUserExist( final String id) {
+    private void checkUserExist(final String id) {
         mUsersProvider.getUser(id).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {//metodo que trae el documento de LA COLECCION, TIENE LA INFORMACION
-                if(documentSnapshot.exists()){ //verifica si el documento que estoy apuntando existe
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
                     mDialog.dismiss();
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                     startActivity(intent);
-                }else {
-                    String email = mAuthProvider.getEmail();//devuelve el email del usuario que ya tiene iniciada unsesion
+                }
+                else {
+                    String email = mAuthProvider.getEmail();
                     User user = new User();
                     user.setEmail(email);
                     user.setId(id);
@@ -177,12 +173,12 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             mDialog.dismiss();
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Intent intent = new Intent(MainActivity.this, CompleteProfileActivity.class);
                                 startActivity(intent);
                             }
-                            else{
-                                Toast.makeText(MainActivity.this, "No se pudo almacenar la información del usuario", Toast.LENGTH_SHORT).show();
+                            else {
+                                Toast.makeText(MainActivity.this, "No se pudo almacenar la informacion del usuario", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -191,26 +187,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    //METODO PARA MOSTRAR LOS VALORES EN LA CONSOLA
     private void login() {
-        String email = mTextInputEmail.getText().toString();//captura el texto de email
-        String password = mTextInputPassword.getText().toString();// contraseña
-        //para el espere por favor
+        String email = mTextInputEmail.getText().toString();
+        String password = mTextInputPassword.getText().toString();
         mDialog.show();
-        mAuthProvider.login(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        mAuthProvider.login(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                mDialog.dismiss();//oculta el mensaje
-                //si fue exitoso, el login nos lleva al a la ventana HomeActivity
-                if(task.isSuccessful()){
-                    Intent intent =  new Intent(MainActivity.this, HomeActivity.class);
+                mDialog.dismiss();
+                if (task.isSuccessful()) {
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                }else {
+                }
+                else {
                     Toast.makeText(MainActivity.this, "El email o la contraseña que ingresaste no son correctas", Toast.LENGTH_LONG).show();
                 }
             }
         });
-        Log.d("CAMPO", "email: " + email); //para imprimir un mensaje en consola
+        Log.d("CAMPO", "email: " + email);
         Log.d("CAMPO", "password: " + password);
     }
+
+
 }

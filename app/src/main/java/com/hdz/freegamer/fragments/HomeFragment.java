@@ -33,7 +33,6 @@ import com.hdz.freegamer.providers.PostProvider;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
-
     View mView;
     FloatingActionButton mFab;
     Toolbar mToolbar;
@@ -61,6 +60,7 @@ public class HomeFragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Publicaciones");
+
         setHasOptionsMenu(true);
         mAuthProvider = new AuthProvider();
         mPostProvider = new PostProvider();
@@ -74,7 +74,6 @@ public class HomeFragment extends Fragment {
         return mView;
     }
 
-    //trae los cambios de la db en tiempo real
     @Override
     public void onStart() {
         super.onStart();

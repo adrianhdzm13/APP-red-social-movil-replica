@@ -21,6 +21,7 @@ import com.hdz.freegamer.models.User;
 import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.UsersProvider;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -39,13 +40,11 @@ public class RegisterActivity extends AppCompatActivity {
     TextInputEditText mTextInputEmail;
     TextInputEditText mTextInputPassword;
     TextInputEditText mTextInputConfirmPassword;
+    TextInputEditText mTextInputPhone;
     Button mButtonRegister;
     AuthProvider mAuthProvider;
     UsersProvider mUsersProvider;
     AlertDialog mDialog;
-
-
-
 
 
     @Override
@@ -53,17 +52,18 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        //instancia
         mCircleImageViewBack = findViewById(R.id.circleImageBack);
         mTextInputEmail = findViewById(R.id.textInputEmail);
         mTextInputUsername = findViewById(R.id.textInputUsername);
         mTextInputPassword = findViewById(R.id.textInputPassword);
         mTextInputConfirmPassword = findViewById(R.id.textInputConfirmPassword);
+        mTextInputPhone = findViewById(R.id.textInputPhone);
         mButtonRegister = findViewById(R.id.btnRegister);
 
         mAuthProvider = new AuthProvider();
         mUsersProvider = new UsersProvider();
-        mDialog =  new SpotsDialog.Builder()
+
+        mDialog = new SpotsDialog.Builder()
                 .setContext(this)
                 .setMessage("Espere un momento")
                 .setCancelable(false).build();
@@ -74,7 +74,6 @@ public class RegisterActivity extends AppCompatActivity {
                 register();
             }
         });
-
         mCircleImageViewBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -88,14 +87,15 @@ public class RegisterActivity extends AppCompatActivity {
         String email = mTextInputEmail.getText().toString();
         String password  = mTextInputPassword.getText().toString();
         String confirmPassword = mTextInputConfirmPassword.getText().toString();
+        String phone = mTextInputPhone.getText().toString();
 
         //metodo isEmpty pregunta si lo que inserto el usuario en el campo username esta vacio
         // ! si no esta vacio, si ha insertado algo
-        if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty()) {
+        if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty() && !phone.isEmpty()) {
             if (isEmailValid(email)) {
                 if (password.equals(confirmPassword)) {
                     if (password.length() >= 6) {
-                        createUser(username, email, password);
+                        createUser(username, email, password,phone);
                     }
                     else {
                         //Toast para mostrar mensaje de validaciòn
@@ -115,30 +115,32 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void createUser( final String username, final String email, final String password) {
+    private void createUser(final String username, final String email, final String password, final String phone) {
         mDialog.show();
         mAuthProvider.register(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    String id = mAuthProvider.getUid();//obtiene la sesion actual del uusario, siempre cuando este logueado
+                    String id = mAuthProvider.getUid();
+
                     User user = new User();
                     user.setId(id);
                     user.setEmail(email);
                     user.setUsername(username);
+                    user.setPhone(phone);
+                    user.setTimestamp(new Date().getTime());//trae un campo lon que sear un numero que identifica la fecha d ecreacion del usuario
 
                     mUsersProvider.create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             mDialog.dismiss();
-                            //valida si es exitosa
-                            if(task.isSuccessful()){
-                                Intent intent =  new Intent( RegisterActivity.this, HomeActivity.class);
-                                //para limpiar el historial de pantallas en la que ha navegado el usuario
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
-                            }else{
-                                Toast.makeText(RegisterActivity.this, "El usuario no se pudo almacenar en la base de datos ", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(RegisterActivity.this, "No se pudo almacenar el usuario en la base de datos", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

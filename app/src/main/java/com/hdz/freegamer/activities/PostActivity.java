@@ -46,6 +46,7 @@ import dmax.dialog.SpotsDialog;
 import static android.app.Activity.RESULT_OK;
 
 public class PostActivity extends AppCompatActivity {
+
     ImageView mImageViewPost1;
     ImageView mImageViewPost2;
     File mImageFile;
@@ -83,7 +84,6 @@ public class PostActivity extends AppCompatActivity {
     String mPhotoPath2;
     File mPhotoFile2;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,7 +99,7 @@ public class PostActivity extends AppCompatActivity {
                 .setCancelable(false).build();
 
         mBuilderSelector = new AlertDialog.Builder(this);
-        mBuilderSelector.setTitle("Selecciona una opción");
+        mBuilderSelector.setTitle("Selecciona una opcion");
         options = new CharSequence[] {"Imagen de galeria", "Tomar foto"};
 
         mImageViewPost1 = findViewById(R.id.imageViewPost1);
@@ -114,14 +114,16 @@ public class PostActivity extends AppCompatActivity {
         mTextViewCategory = findViewById(R.id.textViewCategory);
         mCircleImageBack = findViewById(R.id.circleImageBack);
 
-
-
+        mCircleImageBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         mButtonPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //para subir la imagen
-               // saveImage();
                 clickPost();
             }
         });
@@ -129,14 +131,14 @@ public class PostActivity extends AppCompatActivity {
         mImageViewPost1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //la opcion que oprima el usuario
-                selectOptionImage( 1 );
+                selectOptionImage(1);
             }
         });
+
         mImageViewPost2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                selectOptionImage( 2 );
+                selectOptionImage(2);
             }
         });
 
@@ -144,7 +146,6 @@ public class PostActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mCategory = "PC";
-                //para cambiar el texto en categoria, cuando presiono
                 mTextViewCategory.setText(mCategory);
             }
         });
@@ -174,7 +175,6 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    //metodo para las opciones de subir imagen
     private void selectOptionImage(final int numberImage) {
 
         mBuilderSelector.setItems(options, new DialogInterface.OnClickListener() {
@@ -203,7 +203,6 @@ public class PostActivity extends AppCompatActivity {
 
     }
 
-    //metodo para llamar la camara
     private void takePhoto(int requestCode) {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -223,9 +222,6 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-
-
-    @NotNull
     private File createPhotoFile(int requestCode) throws IOException {
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File photoFile = File.createTempFile(
@@ -233,7 +229,6 @@ public class PostActivity extends AppCompatActivity {
                 ".jpg",
                 storageDir
         );
-        //estos pack se asignan dependiendo de la eleccion del usuario
         if (requestCode == PHOTO_REQUEST_CODE) {
             mPhotoPath = "file:" + photoFile.getAbsolutePath();
             mAbsolutePhotoPath = photoFile.getAbsolutePath();
@@ -246,7 +241,6 @@ public class PostActivity extends AppCompatActivity {
     }
 
 
-    //Eventoss
     private void clickPost() {
 
         mTitle = mTextInputTitle.getText().toString();
@@ -275,8 +269,6 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-
-    //metodo para guardar imagen
     private void saveImage(File imageFile1, final File imageFile2) {
         mDialog.show();
         mImageProvider.save(PostActivity.this, imageFile1).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
@@ -303,6 +295,7 @@ public class PostActivity extends AppCompatActivity {
                                                 post.setDescription(mDescription);
                                                 post.setCategory(mCategory);
                                                 post.setIdUser(mAuthProvider.getUid());
+                                                post.setTimestamp(new Date().getTime());
                                                 mPostProvider.save(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> taskSave) {
@@ -336,7 +329,6 @@ public class PostActivity extends AppCompatActivity {
         });
     }
 
-    //metodo para limpiar la pantalla
     private void clearForm() {
         mTextInputTitle.setText("");
         mTextInputDescription.setText("");
@@ -349,7 +341,7 @@ public class PostActivity extends AppCompatActivity {
         mImageFile = null;
         mImageFile2 = null;
     }
-    //metodo para abrir la galeria del dispositivo
+
     private void openGallery(int requestCode) {
         Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
         galleryIntent.setType("image/*");
@@ -402,5 +394,4 @@ public class PostActivity extends AppCompatActivity {
             Picasso.with(PostActivity.this).load(mPhotoPath2).into(mImageViewPost2);
         }
     }
-
 }

@@ -20,6 +20,7 @@ import com.hdz.freegamer.models.User;
 import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.UsersProvider;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +28,9 @@ import dmax.dialog.SpotsDialog;
 
 public class CompleteProfileActivity extends AppCompatActivity {
 
+
     TextInputEditText mTextInputUsername;
+    TextInputEditText mTextInputPhone;
     Button mButtonRegister;
     AuthProvider mAuthProvider;
     UsersProvider mUsersProvider;
@@ -39,11 +42,13 @@ public class CompleteProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_complete_profile);
 
         mTextInputUsername = findViewById(R.id.textInputUsername);
+        mTextInputPhone = findViewById(R.id.textInputPhone);
         mButtonRegister = findViewById(R.id.btnRegister);
 
         mAuthProvider = new AuthProvider();
         mUsersProvider = new UsersProvider();
-        mDialog =  new SpotsDialog.Builder()
+
+        mDialog = new SpotsDialog.Builder()
                 .setContext(this)
                 .setMessage("Espere un momento")
                 .setCancelable(false).build();
@@ -54,24 +59,27 @@ public class CompleteProfileActivity extends AppCompatActivity {
                 register();
             }
         });
-
     }
 
     private void register() {
         String username = mTextInputUsername.getText().toString();
+        String phone = mTextInputPhone.getText().toString();
         if (!username.isEmpty()) {
-            updateUser(username);
+            updateUser(username, phone);
         }
         else {
             Toast.makeText(this, "Para continuar inserta todos los campos", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void updateUser(final String username) {
+    private void updateUser(final String username, final String phone) {
         String id = mAuthProvider.getUid();
         User user = new User();
         user.setUsername(username);
         user.setId(id);
+        user.setPhone(phone);
+        user.setTimestamp(new Date().getTime());
+
         mDialog.show();
         mUsersProvider.update(user).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

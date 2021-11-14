@@ -21,7 +21,7 @@
             android:background="@color/colorAccent"
             app:itemIconTint="@color/colorWhite"
             app:itemTextColor="@color/colorWhite"
-            app:menu="@menu/botton_navegation_menu"
+            app:menu="@menu/botton_navigation_menu"
             />
 
     </FrameLayout>

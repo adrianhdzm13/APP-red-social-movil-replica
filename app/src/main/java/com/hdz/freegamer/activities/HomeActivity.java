@@ -19,7 +19,6 @@ import com.hdz.freegamer.fragments.ProfileFragment;
 public class HomeActivity extends AppCompatActivity {
     BottomNavigationView bottomNavigation;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        openFragment(new HomeFragment());//LLAMA AL FRAME POR DEFECTO, EL INICIO
+        openFragment(new HomeFragment());
     }
 
     public void openFragment(Fragment fragment) {
@@ -47,12 +46,12 @@ public class HomeActivity extends AppCompatActivity {
                     }
                     else if (item.getItemId() == R.id.itemChats) {
                         // FRAGMENT CHATS
-                       openFragment(new ChatsFragment());
+                        openFragment(new ChatsFragment());
 
                     }
                     else if (item.getItemId() == R.id.itemFilters) {
                         // FRAGMENT FILTROS
-                       openFragment(new FiltersFragment());
+                        openFragment(new FiltersFragment());
 
                     }
                     else if (item.getItemId() == R.id.itemProfile) {

@@ -1,6 +1,7 @@
 package com.hdz.freegamer.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,23 +13,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.hdz.freegamer.R;
+import com.hdz.freegamer.activities.PostDetailActivity;
 import com.hdz.freegamer.models.Post;
 import com.squareup.picasso.Picasso;
 
 public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.ViewHolder> {
 
-    Context context;//está variable viene de android
+    Context context;
 
-    //constructor
     public PostsAdapter(FirestoreRecyclerOptions<Post> options, Context context) {
         super(options);
         this.context = context;
     }
 
     @Override
-    //metodo que establece el contenido que quiero que se muestre en cada un ade las vistas que tnemos en la clase viewHolder
     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Post post) {
+
+        DocumentSnapshot document = getSnapshots().getSnapshot(position);
+        final String postId = document.getId();
+
         holder.textViewTitle.setText(post.getTitle());
         holder.textViewDescription.setText(post.getDescription());
         if (post.getImage1() != null) {
@@ -36,28 +41,35 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
                 Picasso.with(context).load(post.getImage1()).into(holder.imageViewPost);
             }
         }
+        holder.viewHolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PostDetailActivity.class);
+                intent.putExtra("id", postId);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @NonNull
     @Override
-    //instancia de la vista imagen
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview_post, parent, false);
         return new ViewHolder(view);
     }
 
-    //inicializacion de las vistas
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewTitle;
         TextView textViewDescription;
         ImageView imageViewPost;
+        View viewHolder;
 
-        //instancia, id texview
         public ViewHolder(View view) {
             super(view);
             textViewTitle = view.findViewById(R.id.textViewTitlePostCard);
             textViewDescription = view.findViewById(R.id.textViewDescriptionPostCard);
             imageViewPost = view.findViewById(R.id.imageViewPostCard);
+            viewHolder = view;
         }
     }
 
