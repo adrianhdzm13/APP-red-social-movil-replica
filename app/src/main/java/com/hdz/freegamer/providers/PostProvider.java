@@ -7,6 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.hdz.freegamer.models.Post;
 
+
 public class PostProvider {
 
     CollectionReference mCollection;
@@ -20,7 +21,7 @@ public class PostProvider {
     }
 
     public Query getAll() {
-        return mCollection.orderBy("title", Query.Direction.DESCENDING);
+        return mCollection.orderBy("timestamp", Query.Direction.DESCENDING);
     }
 
     public Query getPostByUser(String id) {

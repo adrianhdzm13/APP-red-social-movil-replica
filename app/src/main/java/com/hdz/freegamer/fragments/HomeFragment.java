@@ -33,6 +33,7 @@ import com.hdz.freegamer.providers.PostProvider;
  * A simple {@link Fragment} subclass.
  */
 public class HomeFragment extends Fragment {
+
     View mView;
     FloatingActionButton mFab;
     Toolbar mToolbar;
