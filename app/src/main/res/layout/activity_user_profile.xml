@@ -16,11 +16,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/colorAccent"
             >
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"
+                android:transitionName="@string/transtionname_picture">
 
                 <View
                     android:layout_width="match_parent"
@@ -34,8 +37,7 @@
                     android:src="@drawable/cover_image"
                     android:scaleType="centerCrop"
                     android:alpha="0.8"
-                    app:layout_collapseMode="parallax"
-                    android:transitionName="@string/transtionname_picture"/>
+                    />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/circleImageProfile"
@@ -136,6 +138,12 @@
 
             </FrameLayout>
 
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -146,28 +154,33 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_marginTop="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="No hay publicaciones"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:textSize="18dp"
-            android:textStyle="italic" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewPostExist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No hay publicaciones"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textSize="18dp"
+                android:textStyle="italic" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMyPost"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
+
+        </LinearLayout>
+
 
     </androidx.core.widget.NestedScrollView>
-
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageBack"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_arrow_back_white"
-        android:layout_margin="10dp"
-        android:scaleType="centerCrop"
-        />
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

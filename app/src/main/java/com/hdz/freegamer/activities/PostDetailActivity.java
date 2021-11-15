@@ -15,7 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,7 +27,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.hdz.freegamer.R;
 import com.hdz.freegamer.adapters.CommentAdapter;
 import com.hdz.freegamer.adapters.SliderAdapter;
@@ -33,8 +38,10 @@ import com.hdz.freegamer.models.Comment;
 import com.hdz.freegamer.models.SliderItem;
 import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.CommentsProvider;
+import com.hdz.freegamer.providers.LikesProvider;
 import com.hdz.freegamer.providers.PostProvider;
 import com.hdz.freegamer.providers.UsersProvider;
+import com.hdz.freegamer.utils.RelativeTime;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -45,7 +52,6 @@ import java.util.Date;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-
 public class PostDetailActivity extends AppCompatActivity {
 
     SliderView mSliderView;
@@ -56,6 +62,7 @@ public class PostDetailActivity extends AppCompatActivity {
     UsersProvider mUsersProvider;
     CommentsProvider mCommentsProvider;
     AuthProvider mAuthProvider;
+    LikesProvider mLikesProvider;
 
     CommentAdapter mAdapter;
 
@@ -66,12 +73,14 @@ public class PostDetailActivity extends AppCompatActivity {
     TextView mTextViewUsername;
     TextView mTextViewPhone;
     TextView mTextViewNameCategory;
+    TextView mTextViewRelativeTime;
+    TextView mTextViewLikes;
     ImageView mImageViewCategory;
     CircleImageView mCircleImageViewProfile;
     Button mButtonShowProfile;
-    CircleImageView mCircleImageViewBack;
     FloatingActionButton mFabComment;
     RecyclerView mRecyclerView;
+    Toolbar mToolbar;
 
     String mIdUser = "";
 
@@ -86,12 +95,18 @@ public class PostDetailActivity extends AppCompatActivity {
         mTextViewUsername = findViewById(R.id.textViewUsername);
         mTextViewPhone = findViewById(R.id.textViewPhone);
         mTextViewNameCategory = findViewById(R.id.textViewNameCategory);
+        mTextViewRelativeTime = findViewById(R.id.textViewRelativeTime);
+        mTextViewLikes = findViewById(R.id.textViewLikes);
         mImageViewCategory = findViewById(R.id.imageViewCategory);
         mCircleImageViewProfile = findViewById(R.id.circleImageProfile);
         mButtonShowProfile = findViewById(R.id.btnShowProfile);
-        mCircleImageViewBack = findViewById(R.id.circleImageBack);
         mFabComment = findViewById(R.id.fabComment);
         mRecyclerView = findViewById(R.id.recyclerViewComments);
+        mToolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(PostDetailActivity.this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
@@ -100,10 +115,9 @@ public class PostDetailActivity extends AppCompatActivity {
         mUsersProvider = new UsersProvider();
         mCommentsProvider = new CommentsProvider();
         mAuthProvider = new AuthProvider();
+        mLikesProvider = new LikesProvider();
 
         mExtraPostId = getIntent().getStringExtra("id");
-
-        getPost();
 
         mFabComment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,17 +126,29 @@ public class PostDetailActivity extends AppCompatActivity {
             }
         });
 
-        mCircleImageViewBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         mButtonShowProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 goToShowProfile();
+            }
+        });
+
+        getPost();
+        getNumberLikes();
+
+    }
+
+    private void getNumberLikes() {
+        mLikesProvider.getLikesByPost(mExtraPostId).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                int numberLikes = queryDocumentSnapshots.size();
+                if (numberLikes == 1) {
+                    mTextViewLikes.setText(numberLikes + " Me gusta");
+                }
+                else {
+                    mTextViewLikes.setText(numberLikes + " Me gustas");
+                }
             }
         });
 
@@ -285,6 +311,11 @@ public class PostDetailActivity extends AppCompatActivity {
                     if (documentSnapshot.contains("idUser")) {
                         mIdUser = documentSnapshot.getString("idUser");
                         getUserInfo(mIdUser);
+                    }
+                    if (documentSnapshot.contains("timestamp")) {
+                        long timestamp = documentSnapshot.getLong("timestamp");
+                        String relativeTime = RelativeTime.getTimeAgo(timestamp, PostDetailActivity.this);
+                        mTextViewRelativeTime.setText(relativeTime);
                     }
 
                     instanceSlider();

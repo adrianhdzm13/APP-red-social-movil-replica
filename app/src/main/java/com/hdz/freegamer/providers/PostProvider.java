@@ -24,12 +24,24 @@ public class PostProvider {
         return mCollection.orderBy("timestamp", Query.Direction.DESCENDING);
     }
 
+    public Query getPostByCategoryAndTimestamp(String category) {
+        return mCollection.whereEqualTo("category", category).orderBy("timestamp", Query.Direction.DESCENDING);
+    }
+
+    public Query getPostByTitle(String title) {
+        return mCollection.orderBy("title").startAt(title).endAt(title+'\uf8ff');
+    }
+
     public Query getPostByUser(String id) {
         return mCollection.whereEqualTo("idUser", id);
     }
 
     public Task<DocumentSnapshot> getPostById(String id) {
         return mCollection.document(id).get();
+    }
+
+    public Task<Void> delete(String id) {
+        return mCollection.document(id).delete();
     }
 
 }

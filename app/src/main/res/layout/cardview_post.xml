@@ -85,7 +85,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:text="0 Me gusta" />
+                android:text="0 Me gustas" />
 
         </LinearLayout>
 

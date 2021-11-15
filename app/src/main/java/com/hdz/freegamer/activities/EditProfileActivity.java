@@ -350,7 +350,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(EditProfileActivity.this, "com.optic.socialmediagamer", photoFile);
+                Uri photoUri = FileProvider.getUriForFile(EditProfileActivity.this, "com.hdz.freegamer", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, requestCode);
             }

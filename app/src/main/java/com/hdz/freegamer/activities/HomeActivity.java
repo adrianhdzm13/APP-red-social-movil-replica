@@ -14,10 +14,15 @@ import com.hdz.freegamer.fragments.ChatsFragment;
 import com.hdz.freegamer.fragments.FiltersFragment;
 import com.hdz.freegamer.fragments.HomeFragment;
 import com.hdz.freegamer.fragments.ProfileFragment;
-
+import com.hdz.freegamer.providers.AuthProvider;
+import com.hdz.freegamer.providers.TokenProvider;
 
 public class HomeActivity extends AppCompatActivity {
+
     BottomNavigationView bottomNavigation;
+
+    TokenProvider mTokenProvider;
+    AuthProvider mAuthProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +31,11 @@ public class HomeActivity extends AppCompatActivity {
 
         bottomNavigation = findViewById(R.id.bottom_navigation);
         bottomNavigation.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+
+        mTokenProvider = new TokenProvider();
+        mAuthProvider = new AuthProvider();
         openFragment(new HomeFragment());
+        createToken();
     }
 
     public void openFragment(Fragment fragment) {
@@ -61,4 +70,8 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 }
             };
+
+    private void createToken() {
+        mTokenProvider.create(mAuthProvider.getUid());
+    }
 }
