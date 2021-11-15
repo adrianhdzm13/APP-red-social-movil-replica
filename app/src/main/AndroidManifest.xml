@@ -17,8 +17,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activities.FiltersActivity"
-            android:parentActivityName=".activities.HomeActivity"/>
+        <activity android:name=".activities.ChatActivity"></activity>
+        <activity
+            android:name=".activities.FiltersActivity"
+            android:parentActivityName=".activities.HomeActivity" />
         <activity
             android:name=".activities.UserProfileActivity"
             android:parentActivityName=".activities.PostDetailActivity" />
@@ -26,6 +28,7 @@
             android:name=".activities.PostDetailActivity"
             android:parentActivityName=".activities.HomeActivity" />
         <activity android:name=".activities.EditProfileActivity" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -56,6 +59,11 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id" />
+
 
     </application>
 
