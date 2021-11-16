@@ -46,6 +46,7 @@ import com.hdz.freegamer.providers.PostProvider;
 import com.hdz.freegamer.providers.TokenProvider;
 import com.hdz.freegamer.providers.UsersProvider;
 import com.hdz.freegamer.utils.RelativeTime;
+import com.hdz.freegamer.utils.ViewedMessageHelper;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -180,12 +181,19 @@ public class PostDetailActivity extends AppCompatActivity {
         mAdapter = new CommentAdapter(options, PostDetailActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, PostDetailActivity.this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mAdapter.stopListening();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, PostDetailActivity.this);
     }
 
     private void showDialogComment() {

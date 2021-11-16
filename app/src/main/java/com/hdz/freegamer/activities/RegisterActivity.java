@@ -34,8 +34,7 @@ import dmax.dialog.SpotsDialog;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    //creacion de objetos
-    CircleImageView mCircleImageViewBack;//para volver a la vista anterior
+    CircleImageView mCircleImageViewBack;
     TextInputEditText mTextInputUsername;
     TextInputEditText mTextInputEmail;
     TextInputEditText mTextInputPassword;
@@ -89,16 +88,13 @@ public class RegisterActivity extends AppCompatActivity {
         String confirmPassword = mTextInputConfirmPassword.getText().toString();
         String phone = mTextInputPhone.getText().toString();
 
-        //metodo isEmpty pregunta si lo que inserto el usuario en el campo username esta vacio
-        // ! si no esta vacio, si ha insertado algo
         if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !confirmPassword.isEmpty() && !phone.isEmpty()) {
             if (isEmailValid(email)) {
                 if (password.equals(confirmPassword)) {
                     if (password.length() >= 6) {
-                        createUser(username, email, password,phone);
+                        createUser(username, email, password, phone);
                     }
                     else {
-                        //Toast para mostrar mensaje de validaciòn
                         Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -128,7 +124,7 @@ public class RegisterActivity extends AppCompatActivity {
                     user.setEmail(email);
                     user.setUsername(username);
                     user.setPhone(phone);
-                    user.setTimestamp(new Date().getTime());//trae un campo lon que sear un numero que identifica la fecha d ecreacion del usuario
+                    user.setTimestamp(new Date().getTime());
 
                     mUsersProvider.create(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -162,5 +158,6 @@ public class RegisterActivity extends AppCompatActivity {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
+
 
 }

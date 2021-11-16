@@ -30,6 +30,7 @@ import com.hdz.freegamer.models.Post;
 import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.PostProvider;
 import com.hdz.freegamer.providers.UsersProvider;
+import com.hdz.freegamer.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -122,12 +123,18 @@ public class UserProfileActivity extends AppCompatActivity {
         mAdapter = new MyPostsAdapter(options, UserProfileActivity.this);
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, UserProfileActivity.this);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mAdapter.stopListening();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, UserProfileActivity.this);
     }
 
     private void checkIfExistPost() {

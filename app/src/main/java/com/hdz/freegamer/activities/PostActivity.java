@@ -32,6 +32,7 @@ import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.ImageProvider;
 import com.hdz.freegamer.providers.PostProvider;
 import com.hdz.freegamer.utils.FileUtil;
+import com.hdz.freegamer.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -67,6 +68,7 @@ public class PostActivity extends AppCompatActivity {
     String mTitle = "";
     String mDescription = "";
     AlertDialog mDialog;
+
     AlertDialog.Builder mBuilderSelector;
     CharSequence options[];
     private final int GALLERY_REQUEST_CODE = 1;
@@ -215,7 +217,7 @@ public class PostActivity extends AppCompatActivity {
             }
 
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(PostActivity.this, "com.hdz.freegamer", photoFile);
+                Uri photoUri = FileProvider.getUriForFile(PostActivity.this, "com.optic.socialmediagamer", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, requestCode);
             }
@@ -291,7 +293,7 @@ public class PostActivity extends AppCompatActivity {
                                                 Post post = new Post();
                                                 post.setImage1(url);
                                                 post.setImage2(url2);
-                                                post.setTitle(mTitle.toLowerCase());//transforma el titulo a minusculas
+                                                post.setTitle(mTitle.toLowerCase());
                                                 post.setDescription(mDescription);
                                                 post.setCategory(mCategory);
                                                 post.setIdUser(mAuthProvider.getUid());
@@ -393,5 +395,17 @@ public class PostActivity extends AppCompatActivity {
             mPhotoFile2 = new File(mAbsolutePhotoPath2);
             Picasso.with(PostActivity.this).load(mPhotoPath2).into(mImageViewPost2);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, PostActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, PostActivity.this);
     }
 }

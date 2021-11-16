@@ -28,7 +28,6 @@ import dmax.dialog.SpotsDialog;
 
 public class CompleteProfileActivity extends AppCompatActivity {
 
-
     TextInputEditText mTextInputUsername;
     TextInputEditText mTextInputPhone;
     Button mButtonRegister;

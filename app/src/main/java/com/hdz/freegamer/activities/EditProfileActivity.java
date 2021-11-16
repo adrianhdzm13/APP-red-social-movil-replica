@@ -31,6 +31,7 @@ import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.ImageProvider;
 import com.hdz.freegamer.providers.UsersProvider;
 import com.hdz.freegamer.utils.FileUtil;
+import com.hdz.freegamer.utils.ViewedMessageHelper;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -350,7 +351,7 @@ public class EditProfileActivity extends AppCompatActivity {
             }
 
             if (photoFile != null) {
-                Uri photoUri = FileProvider.getUriForFile(EditProfileActivity.this, "com.hdz.freegamer", photoFile);
+                Uri photoUri = FileProvider.getUriForFile(EditProfileActivity.this, "com.optic.socialmediagamer", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, requestCode);
             }
@@ -426,6 +427,18 @@ public class EditProfileActivity extends AppCompatActivity {
             mPhotoFile2 = new File(mAbsolutePhotoPath2);
             Picasso.with(EditProfileActivity.this).load(mPhotoPath2).into(mImageViewCover);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ViewedMessageHelper.updateOnline(true, EditProfileActivity.this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, EditProfileActivity.this);
     }
 
 }

@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.hdz.freegamer.R;
 import com.hdz.freegamer.activities.PostDetailActivity;
@@ -37,6 +38,7 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
     LikesProvider mLikesProvider;
     AuthProvider mAuthProvider;
     TextView mTextViewNumberFilter;
+    ListenerRegistration mListener;
 
     public PostsAdapter(FirestoreRecyclerOptions<Post> options, Context context) {
         super(options);
@@ -93,7 +95,6 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
             }
         });
 
-
         getUserInfo(post.getIdUser(), holder);
         getNumberLikesByPost(postId, holder);
         checkIfExistLike(postId, mAuthProvider.getUid(), holder);
@@ -101,11 +102,13 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
 
 
     private void getNumberLikesByPost(String idPost, final ViewHolder holder) {
-        mLikesProvider.getLikesByPost(idPost).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        mListener = mLikesProvider.getLikesByPost(idPost).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                int numberLikes = queryDocumentSnapshots.size();
-                holder.textViewLikes.setText(String.valueOf(numberLikes) + " Me gustas");
+                if (queryDocumentSnapshots != null) {
+                    int numberLikes = queryDocumentSnapshots.size();
+                    holder.textViewLikes.setText(String.valueOf(numberLikes) + " Me gustas");
+                }
             }
         });
     }
@@ -145,7 +148,6 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
 
     }
 
-
     private void getUserInfo(String idUser, final ViewHolder holder) {
         mUsersProvider.getUser(idUser).addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -159,6 +161,10 @@ public class PostsAdapter extends FirestoreRecyclerAdapter<Post, PostsAdapter.Vi
             }
         });
 
+    }
+
+    public ListenerRegistration getListener() {
+        return mListener;
     }
 
     @NonNull

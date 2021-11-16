@@ -8,6 +8,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
         android:allowBackup="true"
@@ -16,8 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <activity android:name=".activities.ChatActivity"></activity>
+        <activity android:name=".activities.ChatActivity"
+            ></activity>
         <activity
             android:name=".activities.FiltersActivity"
             android:parentActivityName=".activities.HomeActivity" />
@@ -28,7 +29,6 @@
             android:name=".activities.PostDetailActivity"
             android:parentActivityName=".activities.HomeActivity" />
         <activity android:name=".activities.EditProfileActivity" />
-
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -63,6 +63,11 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
+        <receiver android:name=".receivers.MessageReceiver"
+            android:enabled="true"
+            android:exported="false"/>
+
 
 
     </application>

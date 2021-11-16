@@ -19,6 +19,7 @@ import com.hdz.freegamer.adapters.PostsAdapter;
 import com.hdz.freegamer.models.Post;
 import com.hdz.freegamer.providers.AuthProvider;
 import com.hdz.freegamer.providers.PostProvider;
+import com.hdz.freegamer.utils.ViewedMessageHelper;
 
 public class FiltersActivity extends AppCompatActivity {
 
@@ -65,12 +66,20 @@ public class FiltersActivity extends AppCompatActivity {
         mPostsAdapter = new PostsAdapter(options, FiltersActivity.this, mTextViewNumberFilter);
         mRecyclerView.setAdapter(mPostsAdapter);
         mPostsAdapter.startListening();
+        ViewedMessageHelper.updateOnline(true, FiltersActivity.this);
+
     }
 
     @Override
     public void onStop() {
         super.onStop();
         mPostsAdapter.stopListening();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ViewedMessageHelper.updateOnline(false, FiltersActivity.this);
     }
 
     @Override

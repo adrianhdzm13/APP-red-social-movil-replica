@@ -68,4 +68,16 @@ public class ChatsFragment extends Fragment {
         super.onStop();
         mAdapter.stopListening();
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapter.getListener() != null) {
+            mAdapter.getListener().remove();
+        }
+        if (mAdapter.getListenerLastMessage() != null) {
+            mAdapter.getListenerLastMessage().remove();
+        }
+    }
+
 }
